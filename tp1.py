@@ -1,25 +1,31 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-#This will be a global variable, this is the lenght of our random variable vectors
+#Defining the factors of the random variables
 LENGHT = 100
 K = 100
+mean = 1
+sigma = 1
+a = 1
+b= 1
+A0=2
+lambda0=1
 
 #This here is the white noise variable, defined in the first session TP
-def white_nosie(mean,sigma , number_var):
+def white_nosie(number_var):
     return np.random.normal(mean,sigma, number_var)
 
 ##This here is the second random Variable, defined in the first session TP
 ##X_t = a +bZ_t-1 + Z_t
-def sum_white_noise(a,b,number_variable):
-    X = white_nosie(0,1,number_variable)
+def sum_white_noise(number_variable):
+    X = white_nosie(number_variable)
     X_rounded = np.roll(X,1)
     X_rounded[0] = 0
     return a + b*X + X_rounded
 
 #This one computes the sum of the random variables multiplied by 2 to the power of the variable's indexc
-def geometric_white_noise(K,a, number_variables):
-    X = white_nosie(0,1,number_variables+K) # generate a white noise 
+def geometric_white_noise(number_variables):
+    X = white_nosie(number_variables+K) # generate a white noise 
     summed_variables = np.zeros(number_variables) # generat array of zeros with the same size of random variable
     # Sum on all of the number of random varibales
     for j in range(number_variables):
@@ -29,9 +35,9 @@ def geometric_white_noise(K,a, number_variables):
 
 
 ##This one is to compute the Random Variable with the cos and the random.uniforme variable on 0 and 2pi
-def cos_noise(A0,lambda0,number_variables):
+def cos_noise(number_variables):
     T=np.arange(0,number_variables) # An array of the number of random variable
-    return A0*np.cos(lambda0*T+np.random.uniform(0,2*np.pi,number_variables))+np.random.normal(0,1,number_variables) # returns the cos function
+    return A0*np.cos(lambda0*T+np.random.uniform(0,2*np.pi,number_variables))+np.random.normal(mean,sigma,number_variables) # returns the cos function
 
 #This function computes the imperical mean of the random variable
 def empirical_mean(X):
@@ -49,15 +55,19 @@ def empirical_autocovariance(X,taus,mean=0):
     return X_sum    
 
 #These here are the random variables defined in the first TP
-X_sum_WN = sum_white_noise(1,1,LENGHT)
-X_sum_geometric_WN = geometric_white_noise(K=K,a=1,number_variables=LENGHT)
-X_cos_WN = cos_noise(A0=2,lambda0=1,number_variables=LENGHT)
-X = white_nosie(0,1,LENGHT)
+X_sum_WN = sum_white_noise(LENGHT)
+X_sum_geometric_WN = geometric_white_noise(number_variables=LENGHT)
+X_cos_WN = cos_noise(number_variables=LENGHT)
+X_WN = white_nosie(LENGHT)
 
-#empirical mean and indexes of x axis
+#empirical means of all the previous random variables and indexes of x axis
 indexes = np.arange(LENGHT)
 empirical_mean_WN = empirical_mean(X_sum_geometric_WN)
-empirical_autocovariance_WN = empirical_autocovariance(X_sum_geometric_WN,taus=indexes,mean=1)
+empirical_autocovariance_WN = empirical_autocovariance(X_WN,taus=indexes,mean=0)
+empirical_autocovariance_sum = empirical_autocovariance(X_sum_WN,mean=1, taus=indexes)
+empirical_autocovariance_geo_sum = empirical_autocovariance(X_sum_geometric_WN,mean=1,taus=indexes)
+empirical_autocovariance_cos = empirical_autocovariance(X_cos_WN,mean=0,taus=indexes)
+
 
 
 #plotting the empirical mean of various random variables 
