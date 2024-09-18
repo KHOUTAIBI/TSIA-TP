@@ -63,24 +63,24 @@ def theoretical_autocov_WN(X):
 #This one for the sum of WN
 def theoretical_autocov_sum_WN(X):
     autocov = np.zeros_like(X)
-    autocov = np.where((autocov == 1) | (autocov == -1), b**2 * sigma**2, 0)
+    autocov = np.where((autocov == 1) | (autocov == len(X)-1), b**2 * sigma**2, 0)
     autocov[0] = (1+b**2)*sigma**2
     return autocov
 
 #This one for the geometric sum of WN
 def theoretical_autocov_geo_sum_WN(X):
     autocov = np.zeros_like(X)
-    for j in range(LENGHT):
-        if abs(j) <=K:
+    for j in range(len(X)):
+        if abs(j) <= K:
             autocov[j] = (sigma**2)* (2**-abs(j))*((1-(1/4)**K-j+1))/(3/4)
         else:
             autocov[j] = 0
-    return 0
+    return autocov
 
 #This one for the autocov of cos
 def theoretical_autocov_cos_WN(X):
     autocov = np.zeros_like(X)
-    for j in range(1,LENGHT):
+    for j in range(1,len(X)):
         autocov[j] = 1/2 * A0**2 * np.cos(lambda0*j)
     return autocov
 
@@ -105,22 +105,53 @@ theoretical_autocovariance_WN = theoretical_autocov_WN(X_WN)
 theoretical_autocovariance_sum = theoretical_autocov_sum_WN(X_sum_WN)
 theoretical_autocovariance_geo_sum = theoretical_autocov_geo_sum_WN(X_sum_geometric_WN)
 theoretical_autocovariance_cos = theoretical_autocov_cos_WN(X_cos_WN)
-MSE =[]
-
+MSE_WN =[]
+MSE_SUM_WN = []
+MSE_GEO_SUM_WN = []
+MSE_COS = []
 #Mean square estimation
 for T in [10,100,500,1000]:
+    mse_wn_inter = []
+    mse_sum_wn_inter = []
+    mse_geo_wn_inter = []
+    mse_cos_wn_inter = []
     for step in range(100):
         X_WN = white_nosie(number_var=T)
+        X_sum_WN = sum_white_noise(number_variable=T)
+        X_sum_geometric_WN = geometric_white_noise(number_variables=T)
+        X_cos_WN = cos_noise(number_variables=T)
+
         theoretical_autocovariance_WN = theoretical_autocov_WN(X_WN)[0:T]
+        theoretical_autocovariance_sum = theoretical_autocov_sum_WN(X_sum_WN)[0:T]
+        theoretical_autocovariance_geo_sum = theoretical_autocov_geo_sum_WN(X_sum_geometric_WN)[0:T]
+        theoretical_autocovariance_cos = theoretical_autocov_cos_WN(X_cos_WN)[0:T]
+
         empirical_autocovariance_WN = empirical_autocovariance(X_WN,taus=np.arange(T),mean=0)
-        MSE.append(np.mean((theoretical_autocovariance_WN-empirical_autocovariance_WN)**2))
-    print(MSE)
-    MSE = []
-    
+        empirical_autocovariance_sum = empirical_autocovariance(X_sum_WN,mean=1, taus=np.arange(T))
+        empirical_autocovariance_geo_sum = empirical_autocovariance(X_sum_geometric_WN,mean=1,taus=np.arange(T))
+        empirical_autocovariance_cos = empirical_autocovariance(X_cos_WN,mean=0,taus=np.arange(T))
+
+        mse_wn_inter.append(np.mean((theoretical_autocovariance_WN-empirical_autocovariance_WN)**2))
+        mse_sum_wn_inter.append(np.mean((theoretical_autocovariance_sum-empirical_autocovariance_sum)**2))
+        mse_geo_wn_inter.append(np.mean((theoretical_autocovariance_geo_sum-empirical_autocovariance_geo_sum)**2))
+        mse_cos_wn_inter.append(np.mean((theoretical_autocovariance_cos-empirical_autocovariance_cos)**2))
+
+    MSE_WN.append(mse_wn_inter)
+    MSE_SUM_WN.append(mse_sum_wn_inter)
+    MSE_GEO_SUM_WN.append(mse_geo_wn_inter)
+    MSE_COS.append(mse_cos_wn_inter)
+
+
 #plotting the empirical mean of various random variables 
+#plt.grid()
+#plt.plot(indexes,X_sum_WN, label='rv path', marker='H')
+#plt.plot(indexes,np.full_like(indexes,empirical_mean_WN), label='empirical mean')
+#plt.scatter(indexes,empirical_autocovariance_sum, label='empirical autocov', color='green' , marker = 'x')
+#plt.legend()
+#plt.show()
+
+# Plotting the MSE for each T defined in the TP
+
 plt.grid()
-plt.plot(indexes,X_sum_WN, label='rv path', marker='H')
-plt.plot(indexes,np.full_like(indexes,empirical_mean_WN), label='empirical mean')
-plt.scatter(indexes,empirical_autocovariance_sum, label='empirical autocov', color='green' , marker = 'x')
-plt.legend()
+plt.plot(np.arange(100),MSE_COS[3])
 plt.show()
