@@ -1,6 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+#This will be a global variable, this is the lenght of our random variable vectors
+LENGHT = 100
+
 #This here is the white noise variable, defined in the first session TP
 def white_nosie(mean,sigma , number_var):
     return np.random.normal(mean,sigma, number_var)
@@ -43,14 +46,15 @@ def empirical_autocovariance(X,taus):
         X_sum_tau = X * shifted_X
         X_sum[i] = np.mean(X_sum_tau)
     return X_sum    
-    
-X_sum_WN = sum_white_noise(1,1,100)
-X_sum_geometric_WN = geometric_white_noise(K=50,a=1,number_variables=100)
-X_cos_WN = cos_noise(A0=2,lambda0=1,number_variables=100)
-X = white_nosie(0,1,100)
+
+#These here are the random variables defined in the first TP
+X_sum_WN = sum_white_noise(1,1,LENGHT)
+X_sum_geometric_WN = geometric_white_noise(K=50,a=1,number_variables=LENGHT)
+X_cos_WN = cos_noise(A0=2,lambda0=1,number_variables=LENGHT)
+X = white_nosie(0,1,LENGHT)
 
 #empirical mean and indexes of x axis
-indexes = np.arange(100)
+indexes = np.arange(LENGHT)
 empirical_mean_WN = empirical_mean(X_cos_WN)
 empirical_autocovariance_WN = empirical_autocovariance(X_sum_geometric_WN,taus=indexes)
 
