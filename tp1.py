@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 #This will be a global variable, this is the lenght of our random variable vectors
 LENGHT = 100
+K = 100
 
 #This here is the white noise variable, defined in the first session TP
 def white_nosie(mean,sigma , number_var):
@@ -38,31 +39,31 @@ def empirical_mean(X):
     return np.mean(X)
 
 #This function computes the empirical autocovariance of The random variable
-def empirical_autocovariance(X,taus):
+def empirical_autocovariance(X,taus,mean=0):
     X_sum = np.zeros(len(taus))
     for i, tau in enumerate(taus):
         #Roll shifts the indexes to be have a difference of indexes = tau
         shifted_X = np.roll(X, tau)
-        X_sum_tau = X * shifted_X
+        X_sum_tau = (X-mean) * (shifted_X - mean)
         X_sum[i] = np.mean(X_sum_tau)
     return X_sum    
 
 #These here are the random variables defined in the first TP
 X_sum_WN = sum_white_noise(1,1,LENGHT)
-X_sum_geometric_WN = geometric_white_noise(K=50,a=1,number_variables=LENGHT)
+X_sum_geometric_WN = geometric_white_noise(K=K,a=1,number_variables=LENGHT)
 X_cos_WN = cos_noise(A0=2,lambda0=1,number_variables=LENGHT)
 X = white_nosie(0,1,LENGHT)
 
 #empirical mean and indexes of x axis
 indexes = np.arange(LENGHT)
-empirical_mean_WN = empirical_mean(X_cos_WN)
-empirical_autocovariance_WN = empirical_autocovariance(X_sum_geometric_WN,taus=indexes)
+empirical_mean_WN = empirical_mean(X_sum_geometric_WN)
+empirical_autocovariance_WN = empirical_autocovariance(X_sum_geometric_WN,taus=indexes,mean=1)
 
 
 #plotting the empirical mean of various random variables 
 plt.grid()
-plt.plot(indexes,X_cos_WN, label='rv path', marker='H')
+plt.plot(indexes,X_sum_geometric_WN, label='rv path', marker='H')
 plt.plot(indexes,np.full_like(indexes,empirical_mean_WN), label='empirical mean')
-plt.plot(indexes,empirical_autocovariance_WN, label='empirical autocov')
+plt.scatter(indexes,empirical_autocovariance_WN, label='empirical autocov', color='green' , marker = 'x')
 plt.legend()
 plt.show()
