@@ -8,7 +8,7 @@ mean = 0
 sigma = 1
 a = 1
 b = 1
-A0 = 2
+A0 = 1
 lambda0 = 1
 
 #This here is the white noise variable, defined in the first session TP
@@ -35,14 +35,16 @@ def geometric_white_noise(number_variables):
 
         ##Fixed j => k and it should work now
         summed_variables[j] = np.sum(np.fromiter(((2**-k)*X[j-k+K] for k in range(K+1)),dtype=float))
-        
+
     return summed_variables + a 
 
 
 ##This one is to compute the Random Variable with the cos and the random.uniforme variable on 0 and 2pi
+
 def cos_noise(number_variables):
     T=np.arange(0,number_variables) # An array of the number of random variable
-    return A0*np.cos(lambda0*T+np.random.uniform(0,2*np.pi,number_variables))+np.random.normal(mean,sigma,number_variables) # returns the cos function
+    PHI = np.random.uniform(0,2*np.pi,1)
+    return A0*np.cos(lambda0*T+np.full_like(np.zeros_like(T),PHI))+np.random.normal(mean,sigma,number_variables) # returns the cos function
 
 #This function computes the imperical mean of the random variable
 def empirical_mean(X):
@@ -156,13 +158,13 @@ for T in [10,100,500,1000]:
 # We have proven empirically that it is NOT wekaly stationnary
 
 #plotting the empirical mean of various random variables 
-#plt.grid()
-#plt.plot(indexes,X_cos_WN, label='rv path', marker='H')
-#plt.plot(indexes,np.full_like(indexes,empirical_mean_WN), label='empirical mean')
-#plt.scatter(indexes,empirical_autocovariance_cos, label='empirical autocov', color='green' , marker = 'x')
-#plt.scatter(indexes,theoretical_autocovariance_cos,label='theo autocov', color='red', marker='1')
-#plt.legend()
-#plt.show()
+plt.grid()
+plt.plot(indexes,X_cos_WN[0:100], label='rv path', marker='H')
+plt.plot(indexes,np.full_like(indexes,empirical_mean_WN), label='empirical mean')
+plt.scatter(indexes,empirical_autocovariance_cos[0:100], label='empirical autocov', color='green' , marker = 'x')
+plt.scatter(indexes,theoretical_autocovariance_cos[0:100],label='theo autocov', color='red', marker='1')
+plt.legend()
+plt.show()
 
 # Plotting the MSE for each T defined in the TP
 
