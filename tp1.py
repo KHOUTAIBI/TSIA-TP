@@ -19,11 +19,10 @@ def white_nosie(number_var):
 ##X_t = a +bZ_t-1 + Z_t
 def sum_white_noise(number_variable):
     X = white_nosie(number_variable)
+    X_1 = white_nosie(number_var=1)
     X_rounded = np.roll(X,1)
     X_rounded = a + b*X + X_rounded
-    X_rounded[0] = 0
-
-    ##TODO : FIX
+    X_rounded[0] = a + b*X[0] + X_1[0]  
     return X_rounded
 
 #This one computes the sum of the random variables multiplied by 2 to the power of the variable's indexc
@@ -50,14 +49,14 @@ def empirical_mean(X):
     return np.mean(X)
 
 #This function computes the empirical autocovariance of The random variable
-def empirical_autocovariance(X,taus,mean=0):
+def empirical_autocovariance(X, taus, mean=0):
+    N = len(X)
     X_sum = np.zeros(len(taus))
-    for k in range(0,len(taus)):
-        X_inter = 0
-        for j in range(0,len(taus)-k):
-            X_inter += (X[j+k]-mean)*(X[j]-mean)
-        X_sum[k] = 1/len(X_sum)  * X_inter
-    return X_sum    
+    for tau, k in enumerate(taus):
+        X_shifted = X[k:N] - mean
+        X_original = X[0:N-k] - mean
+        X_sum[tau] = 1/N  * np.sum(X_shifted * X_original)
+    return X_sum   
 
 #This function return theoretical autocov of WN
 def theoretical_autocov_WN(X):
@@ -85,7 +84,7 @@ def theoretical_autocov_geo_sum_WN(X):
 #This one for the autocov of cos
 def theoretical_autocov_cos_WN(X):
     autocov = np.zeros_like(X)
-    autocov[0] = sigma**2
+    autocov[0] = sigma**2 + (1/2) * (A0**2)
     for j in range(1,len(X)):
         autocov[j] = (1/2) * (A0**2) * (np.cos(lambda0*j))
     return autocov
@@ -112,15 +111,24 @@ theoretical_autocovariance_sum = theoretical_autocov_sum_WN(X_sum_WN)
 theoretical_autocovariance_geo_sum = theoretical_autocov_geo_sum_WN(X_sum_geometric_WN)
 theoretical_autocovariance_cos = theoretical_autocov_cos_WN(X_cos_WN)
 
+
 #List of all MSEs
 MSE_WN =[]
 MSE_SUM_WN = []
 MSE_GEO_SUM_WN = []
 MSE_COS = []
 
+#plotting the empirical mean of various random variables 
+plt.grid()
+plt.plot(indexes,X_cos_WN, label='rv path', marker='H')
+plt.plot(indexes,np.full_like(indexes,empirical_mean_WN), label='empirical mean')
+plt.scatter(indexes,empirical_autocovariance_cos, label='empirical autocov', color='green' , marker = 'x')
+plt.scatter(indexes,theoretical_autocovariance_cos,label='theo autocov', color='red', marker='1')
+plt.legend()
+plt.show()
 
 #Mean square estimation
-for T in [100,500,1000]:
+for T in [10,100,500,1000]:
     mse_wn_inter = []
     mse_sum_wn_inter = []
     mse_geo_wn_inter = []
@@ -146,24 +154,27 @@ for T in [100,500,1000]:
         mse_geo_wn_inter.append(np.mean((theoretical_autocovariance_geo_sum-empirical_autocovariance_geo_sum)**2))
         mse_cos_wn_inter.append(np.mean((theoretical_autocovariance_cos-empirical_autocovariance_cos)**2))
 
-    break
-MSE_WN.append(mse_wn_inter)
-MSE_SUM_WN.append(mse_sum_wn_inter)
-MSE_GEO_SUM_WN.append(mse_geo_wn_inter)
-MSE_COS.append(mse_cos_wn_inter)
+    
+    MSE_WN.append(mse_wn_inter)
+    MSE_SUM_WN.append(mse_sum_wn_inter)
+    MSE_GEO_SUM_WN.append(mse_geo_wn_inter)
+    MSE_COS.append(mse_cos_wn_inter)
 
+#TODO: For Cos , we have a HUGE gap BECAUSE ht e random variable is most likelt not weakly stationnary/ To prove !
 
 #plotting the empirical mean of various random variables 
-#plt.grid()
-#plt.plot(indexes,X_sum_geometric_WN, label='rv path', marker='H')
-#plt.plot(indexes,np.full_like(indexes,empirical_mean_WN), label='empirical mean')
-#plt.scatter(indexes,empirical_autocovariance_geo_sum, label='empirical autocov', color='green' , marker = 'x')
-#plt.scatter(indexes,theoretical_autocovariance_geo_sum,label='theo autocov', color='red', marker='1')
-#plt.legend()
-#plt.show()
+plt.grid()
+plt.plot(indexes,X_cos_WN, label='rv path', marker='H')
+plt.plot(indexes,np.full_like(indexes,empirical_mean_WN), label='empirical mean')
+plt.scatter(indexes,empirical_autocovariance_cos, label='empirical autocov', color='green' , marker = 'x')
+plt.scatter(indexes,theoretical_autocovariance_cos,label='theo autocov', color='red', marker='1')
+plt.legend()
+plt.show()
 
 # Plotting the MSE for each T defined in the TP
 
-plt.grid()
-plt.plot(np.arange(100),MSE_COS[0])
-plt.show()
+#LABELS = ['10','100','500','1000']
+#COLORS = ['peachpuff', 'orange', 'tomato','pink']
+#plt.grid()
+#plt.boxplot(MSE_COS,patch_artist=True,tick_labels=LABELS)
+#plt.show()
