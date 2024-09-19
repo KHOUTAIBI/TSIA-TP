@@ -77,7 +77,7 @@ def theoretical_autocov_geo_sum_WN(X):
     autocov = np.zeros_like(X)
     for j in range(len(X)):
         if abs(j) <= K:
-            autocov[j] = (sigma**2)* (2**-abs(j))*((1-(1/4)**K-j+1))/(3/4)
+            autocov[j] = (sigma**2)* (2**-abs(j))*((1-(1/4)**(K-j+1)))/(3/4)
         else:
             autocov[j] = 0
     return autocov
@@ -117,7 +117,7 @@ MSE_SUM_WN = []
 MSE_GEO_SUM_WN = []
 MSE_COS = []
 
-'''
+
 #Mean square estimation
 for T in [10,100,500,1000]:
     mse_wn_inter = []
@@ -149,13 +149,14 @@ for T in [10,100,500,1000]:
     MSE_SUM_WN.append(mse_sum_wn_inter)
     MSE_GEO_SUM_WN.append(mse_geo_wn_inter)
     MSE_COS.append(mse_cos_wn_inter)
-'''
+
 
 #plotting the empirical mean of various random variables 
 plt.grid()
 plt.plot(indexes,X_sum_geometric_WN, label='rv path', marker='H')
 plt.plot(indexes,np.full_like(indexes,empirical_mean_WN), label='empirical mean')
 plt.scatter(indexes,empirical_autocovariance_geo_sum, label='empirical autocov', color='green' , marker = 'x')
+plt.scatter(indexes,theoretical_autocovariance_geo_sum,label='theo autocov', color='red', marker='1')
 plt.legend()
 plt.show()
 
