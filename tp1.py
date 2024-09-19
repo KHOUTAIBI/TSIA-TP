@@ -118,15 +118,6 @@ MSE_SUM_WN = []
 MSE_GEO_SUM_WN = []
 MSE_COS = []
 
-#plotting the empirical mean of various random variables 
-plt.grid()
-plt.plot(indexes,X_cos_WN, label='rv path', marker='H')
-plt.plot(indexes,np.full_like(indexes,empirical_mean_WN), label='empirical mean')
-plt.scatter(indexes,empirical_autocovariance_cos, label='empirical autocov', color='green' , marker = 'x')
-plt.scatter(indexes,theoretical_autocovariance_cos,label='theo autocov', color='red', marker='1')
-plt.legend()
-plt.show()
-
 #Mean square estimation
 for T in [10,100,500,1000]:
     mse_wn_inter = []
@@ -164,18 +155,23 @@ for T in [10,100,500,1000]:
 # We have proven empirically that it is NOT wekaly stationnary
 
 #plotting the empirical mean of various random variables 
-plt.grid()
-plt.plot(indexes,X_cos_WN, label='rv path', marker='H')
-plt.plot(indexes,np.full_like(indexes,empirical_mean_WN), label='empirical mean')
-plt.scatter(indexes,empirical_autocovariance_cos, label='empirical autocov', color='green' , marker = 'x')
-plt.scatter(indexes,theoretical_autocovariance_cos,label='theo autocov', color='red', marker='1')
-plt.legend()
-plt.show()
+#plt.grid()
+#plt.plot(indexes,X_cos_WN, label='rv path', marker='H')
+#plt.plot(indexes,np.full_like(indexes,empirical_mean_WN), label='empirical mean')
+#plt.scatter(indexes,empirical_autocovariance_cos, label='empirical autocov', color='green' , marker = 'x')
+#plt.scatter(indexes,theoretical_autocovariance_cos,label='theo autocov', color='red', marker='1')
+#plt.legend()
+#plt.show()
 
 # Plotting the MSE for each T defined in the TP
 
-#LABELS = ['10','100','500','1000']
-#COLORS = ['peachpuff', 'orange', 'tomato','pink']
-#plt.grid()
+LABELS = ['10','100','500','1000']
+COLORS = ['peachpuff', 'orange', 'tomato','pink']
+plt.grid()
 #plt.boxplot(MSE_COS,patch_artist=True,tick_labels=LABELS)
-#plt.show()
+#plt.boxplot(MSE_GEO_SUM_WN,patch_artist=True,tick_labels=LABELS)
+ax = plt.boxplot(MSE_SUM_WN,patch_artist=True,tick_labels=LABELS)
+#plt.boxplot(MSE_WN,patch_artist=True,tick_labels=LABELS)
+for patch, color in zip(ax['boxes'], COLORS):
+    patch.set_facecolor(color)
+plt.show()
