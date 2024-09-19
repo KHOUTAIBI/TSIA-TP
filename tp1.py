@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 #Defining the factors of the random variables
 LENGHT = 100
 K = 100
-mean = 1
+mean = 0
 sigma = 1
 a = 1
 b = 1
@@ -20,17 +20,22 @@ def white_nosie(number_var):
 def sum_white_noise(number_variable):
     X = white_nosie(number_variable)
     X_rounded = np.roll(X,1)
+    X_rounded = a + b*X + X_rounded
     X_rounded[0] = 0
-    return a + b*X + X_rounded
+
+    ##TODO : FIX
+    return X_rounded
 
 #This one computes the sum of the random variables multiplied by 2 to the power of the variable's indexc
 def geometric_white_noise(number_variables):
     X = white_nosie(number_variables+K) # generate a white noise 
-    summed_variables = np.zeros(number_variables) # generat array of zeros with the same size of random variable
+    summed_variables = np.zeros(number_variables) # generate array of zeros with the same size of random variable
     # Sum on all of the number of random varibales
     for j in range(number_variables):
         #This index is exactly the random variable defines in the last TP's question
-        summed_variables[j] = np.sum((2**-j)*X[j-k+K] for k in range(K+1))
+
+        ##Fixed j => k and it should work now
+        summed_variables[j] = np.sum((2**-k)*X[j-k+K] for k in range(K+1))
     return summed_variables + a 
 
 
@@ -47,11 +52,11 @@ def empirical_mean(X):
 #This function computes the empirical autocovariance of The random variable
 def empirical_autocovariance(X,taus,mean=0):
     X_sum = np.zeros(len(taus))
-    for i, tau in enumerate(taus):
-        #Roll shifts the indexes to be have a difference of indexes = tau
-        shifted_X = np.roll(X, tau)
-        X_sum_tau = (X - mean) * (shifted_X - mean)
-        X_sum[i] = np.mean(X_sum_tau)
+    for k in range(0,len(taus)):
+        X_inter = 0
+        for j in range(0,len(taus)-k):
+            X_inter += (X[j+k]-mean)*(X[j]-mean)
+        X_sum[k] = 1/len(X_sum)  * X_inter
     return X_sum    
 
 #This function return theoretical autocov of WN
@@ -63,7 +68,7 @@ def theoretical_autocov_WN(X):
 #This one for the sum of WN
 def theoretical_autocov_sum_WN(X):
     autocov = np.zeros_like(X)
-    autocov = np.where((autocov == 1) | (autocov == len(X)-1), b**2 * sigma**2, 0)
+    autocov = np.where((autocov == 1) | (autocov == len(X)), b**2 * sigma**2, 0)
     autocov[0] = (1+b**2)*sigma**2
     return autocov
 
@@ -105,10 +110,14 @@ theoretical_autocovariance_WN = theoretical_autocov_WN(X_WN)
 theoretical_autocovariance_sum = theoretical_autocov_sum_WN(X_sum_WN)
 theoretical_autocovariance_geo_sum = theoretical_autocov_geo_sum_WN(X_sum_geometric_WN)
 theoretical_autocovariance_cos = theoretical_autocov_cos_WN(X_cos_WN)
+
+#List of all MSEs
 MSE_WN =[]
 MSE_SUM_WN = []
 MSE_GEO_SUM_WN = []
 MSE_COS = []
+
+'''
 #Mean square estimation
 for T in [10,100,500,1000]:
     mse_wn_inter = []
@@ -140,18 +149,18 @@ for T in [10,100,500,1000]:
     MSE_SUM_WN.append(mse_sum_wn_inter)
     MSE_GEO_SUM_WN.append(mse_geo_wn_inter)
     MSE_COS.append(mse_cos_wn_inter)
-
+'''
 
 #plotting the empirical mean of various random variables 
-#plt.grid()
-#plt.plot(indexes,X_sum_WN, label='rv path', marker='H')
-#plt.plot(indexes,np.full_like(indexes,empirical_mean_WN), label='empirical mean')
-#plt.scatter(indexes,empirical_autocovariance_sum, label='empirical autocov', color='green' , marker = 'x')
-#plt.legend()
-#plt.show()
+plt.grid()
+plt.plot(indexes,X_sum_geometric_WN, label='rv path', marker='H')
+plt.plot(indexes,np.full_like(indexes,empirical_mean_WN), label='empirical mean')
+plt.scatter(indexes,empirical_autocovariance_geo_sum, label='empirical autocov', color='green' , marker = 'x')
+plt.legend()
+plt.show()
 
 # Plotting the MSE for each T defined in the TP
 
-plt.grid()
-plt.plot(np.arange(100),MSE_COS[3])
-plt.show()
+#plt.grid()
+#plt.plot(np.arange(100),MSE_COS[3])
+#plt.show()
