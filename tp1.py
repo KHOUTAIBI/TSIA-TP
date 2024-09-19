@@ -85,8 +85,9 @@ def theoretical_autocov_geo_sum_WN(X):
 #This one for the autocov of cos
 def theoretical_autocov_cos_WN(X):
     autocov = np.zeros_like(X)
+    autocov[0] = sigma**2
     for j in range(1,len(X)):
-        autocov[j] = 1/2 * A0**2 * np.cos(lambda0*j)
+        autocov[j] = (1/2) * (A0**2) * (np.cos(lambda0*j))
     return autocov
 
 #These here are the random variables defined in the first TP
@@ -119,7 +120,7 @@ MSE_COS = []
 
 
 #Mean square estimation
-for T in [10,100,500,1000]:
+for T in [100,500,1000]:
     mse_wn_inter = []
     mse_sum_wn_inter = []
     mse_geo_wn_inter = []
@@ -145,23 +146,24 @@ for T in [10,100,500,1000]:
         mse_geo_wn_inter.append(np.mean((theoretical_autocovariance_geo_sum-empirical_autocovariance_geo_sum)**2))
         mse_cos_wn_inter.append(np.mean((theoretical_autocovariance_cos-empirical_autocovariance_cos)**2))
 
-    MSE_WN.append(mse_wn_inter)
-    MSE_SUM_WN.append(mse_sum_wn_inter)
-    MSE_GEO_SUM_WN.append(mse_geo_wn_inter)
-    MSE_COS.append(mse_cos_wn_inter)
+    break
+MSE_WN.append(mse_wn_inter)
+MSE_SUM_WN.append(mse_sum_wn_inter)
+MSE_GEO_SUM_WN.append(mse_geo_wn_inter)
+MSE_COS.append(mse_cos_wn_inter)
 
 
 #plotting the empirical mean of various random variables 
-plt.grid()
-plt.plot(indexes,X_sum_geometric_WN, label='rv path', marker='H')
-plt.plot(indexes,np.full_like(indexes,empirical_mean_WN), label='empirical mean')
-plt.scatter(indexes,empirical_autocovariance_geo_sum, label='empirical autocov', color='green' , marker = 'x')
-plt.scatter(indexes,theoretical_autocovariance_geo_sum,label='theo autocov', color='red', marker='1')
-plt.legend()
-plt.show()
+#plt.grid()
+#plt.plot(indexes,X_sum_geometric_WN, label='rv path', marker='H')
+#plt.plot(indexes,np.full_like(indexes,empirical_mean_WN), label='empirical mean')
+#plt.scatter(indexes,empirical_autocovariance_geo_sum, label='empirical autocov', color='green' , marker = 'x')
+#plt.scatter(indexes,theoretical_autocovariance_geo_sum,label='theo autocov', color='red', marker='1')
+#plt.legend()
+#plt.show()
 
 # Plotting the MSE for each T defined in the TP
 
-#plt.grid()
-#plt.plot(np.arange(100),MSE_COS[3])
-#plt.show()
+plt.grid()
+plt.plot(np.arange(100),MSE_COS[0])
+plt.show()
