@@ -161,6 +161,7 @@ for T in [10,100,500,1000]:
     MSE_COS.append(mse_cos_wn_inter)
 
 #TODO: For Cos , we have a HUGE gap BECAUSE ht e random variable is most likelt not weakly stationnary/ To prove !
+# We have proven empirically that it is NOT wekaly stationnary
 
 #plotting the empirical mean of various random variables 
 plt.grid()
