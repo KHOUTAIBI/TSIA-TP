@@ -34,7 +34,8 @@ def geometric_white_noise(number_variables):
         #This index is exactly the random variable defines in the last TP's question
 
         ##Fixed j => k and it should work now
-        summed_variables[j] = np.sum((2**-k)*X[j-k+K] for k in range(K+1))
+        summed_variables[j] = np.sum(np.fromiter(((2**-k)*X[j-k+K] for k in range(K+1)),dtype=float))
+        
     return summed_variables + a 
 
 
@@ -171,6 +172,10 @@ plt.grid()
 #plt.boxplot(MSE_COS,patch_artist=True,tick_labels=LABELS)
 #plt.boxplot(MSE_GEO_SUM_WN,patch_artist=True,tick_labels=LABELS)
 ax = plt.boxplot(MSE_SUM_WN,patch_artist=True,tick_labels=LABELS)
+plt.xlabel('T')
+plt.ylabel('values')
+plt.title(f'Mean square errors after 100 retries X_SUM_WN')
+
 #plt.boxplot(MSE_WN,patch_artist=True,tick_labels=LABELS)
 for patch, color in zip(ax['boxes'], COLORS):
     patch.set_facecolor(color)
