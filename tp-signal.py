@@ -80,18 +80,18 @@ def filter(data):
     return X_down
 
 
-#X = filter(data)
-#
-#write('new_caravan.wav', Fs*2//3, np.array(X, dtype=np.int16)) # to write a new wave file
-#
-#print("finished uploading music")
-#
-#timestep = 1/float(Fs*2//3)
-#times = np.arange(len(X))*timestep
+X = filter(data)
+
+write('new_caravan.wav', Fs*2//3, np.array(X, dtype=np.int16)) # to write a new wave file
+
+print("finished uploading music")
+
+timestep = 1/float(Fs*2//3)
+times = np.arange(len(X))*timestep
 
 
 
-#plot_sound(X,times)
+plot_sound(X,times)
 
 
 def unoptimized_shift(X,step1,step2):
@@ -144,15 +144,15 @@ def optimized_shift(X,step1, step2):
 
 
 #compute the outputs and compare the execution time, may take up to 20 seconds !
-#X = unoptimized_shift(X=x[:],step1=2,step2=3)
-#X_out = optimized_shift(X=x[:], step1=2, step2=3)
+X = unoptimized_shift(X=x[:],step1=2,step2=3)
+X_out = optimized_shift(X=x[:], step1=2, step2=3)
 
 
 ##Defining the variables that we will use in the STFT
 
 N = x.shape[0] # % longueur du signal
-Nw = 512
-w = np.hanning(512) # définition de la fenetre d'analyse
+Nw = 16
+w = np.hanning(16) # définition de la fenetre d'analyse
 ws = w.copy; # définition de la fenêtre de synthèse
 R = 1 # incrément sur les temps d'analyse, appelé hop size, t_a=uR
 M = 32 # ordre de la tfd
@@ -215,7 +215,6 @@ def extents(f):
 
 write('STFT_noise.wav', Fs, np.array(np.real(Xtilde[3,]), dtype=np.int16)) # to write a new wave file
 
-print(Xtilde[3,])
 
 def ola(w = None,hop = None,Nb = 10): 
 # function output = ola(w,hop,Nb)
@@ -230,26 +229,31 @@ def ola(w = None,hop = None,Nb = 10):
     for k in np.arange(0,Nb).reshape(-1):
         deb = k* hop
         fin = deb + N
-        output[np.arange(deb,fin)] += + w # OLA
+        output[np.arange(deb,fin)] = output[np.arange(deb,fin)] + w # OLA
     
     return output
 
-w = np.hanning(512)
+
+print(np.shape(Xtilde))
+
+reconstruction = np.zeros(Nt)
+
+print(f"the size of reconstruction is {np.shape(reconstruction)}")
 
 #verify the tps sufficient condition
-for u in range(len(Xtilde[:,0])): 
-    reconstruciton = np.fft.ifft(Xtilde[:,u])
 
-print(reconstruciton)
+inverse = np.real(np.fft.ifft(Xtilde))
+
+reconstruction = inverse
 
 
-reconstrcuted_signal = ola(w=reconstruciton,hop=512,Nb=len(Xtilde[:,0]))
-indexes = np.arange(len(reconstruciton))
+reconstrcuted_signal = ola(w=reconstruction,hop=512,Nb=len(reconstruction[0,]))
+indexes = np.arange(len(reconstrcuted_signal[:200000]))
 
 plt.grid()
 fig , ax = plt.subplots(2)
-ax[0].plot(indexes,reconstruciton)
-ax[1].plot(np.arange(len(x)),x)
+ax[0].plot(indexes,reconstrcuted_signal[:200000])
+ax[1].plot(np.arange(len(x[:200000])),x[:200000])
 plt.show()
 
 
