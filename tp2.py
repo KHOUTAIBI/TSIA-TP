@@ -43,7 +43,7 @@ X_sum_geometric = geometric_white_noise(K=50,a=1,number_variables=100)
 X_cos = cos_noise(n=100,A0=1,lambda0=0.6)
 X = white_nosie(0,1,100)
 Tf = I(X_sum_white_noise,None,100)
-indexes = np.arange(0,100)
+indexes = np.arange(0,10) #test
 
 
 plt.grid()
