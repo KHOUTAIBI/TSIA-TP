@@ -67,8 +67,6 @@ instance/
 
 # Scrapy stuff:
 .scrapy
-.jpeg
-.wav
 
 # Sphinx documentation
 docs/_build/
@@ -76,6 +74,8 @@ docs/_build/
 # PyBuilder
 .pybuilder/
 target/
+*.wav
+*.jpeg
 
 # Jupyter Notebook
 .ipynb_checkpoints
