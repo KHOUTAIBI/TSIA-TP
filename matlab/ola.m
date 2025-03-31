@@ -2,7 +2,7 @@ function output = ola(w,hop,Nb)
 
 % function output = ola(w,hop,Nb)
 % realise l'addition-recouvrement de la fenetre w,
-% avec un décalage hop et un nombre Nb de fenetres.
+% avec un dï¿½calage hop et un nombre Nb de fenetres.
 % par defaut Nb = 10;
 
 if nargin <= 2, Nb=10;end
