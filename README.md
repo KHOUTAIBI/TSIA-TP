@@ -26,12 +26,12 @@ This repository contains a series of practical assignments completed for the TSI
 ### Time-Series-1
 - Stationarity and differencing
 - Autocorrelation & Partial Autocorrelation
-- AR, MA, ARIMA models
+- AR, MA, ARMA models
 
 ### Time-Series-2
 - Seasonal models
 - Exponential smoothing
-- Forecasting and evaluation
+- Forecasting and evaluation/ Kalman Filtering
 
 ## Getting Started
 
