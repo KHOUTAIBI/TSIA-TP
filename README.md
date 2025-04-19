@@ -9,7 +9,7 @@ This repository contains a series of practical assignments completed for the TSI
 - [`Time-Series-1/`](./Time-Series-1): Introduction to time series processing
 - [`Time-Series-2/`](./Time-Series-2): Advanced time series modeling and forecasting
 
-## 🧠 Topics Covered
+## Topics Covered
 
 ### ML
 - Linear & Logistic Regression
@@ -33,7 +33,7 @@ This repository contains a series of practical assignments completed for the TSI
 - Exponential smoothing
 - Forecasting and evaluation
 
-## 🚀 Getting Started
+## Getting Started
 
 To run the notebooks:
 
@@ -42,3 +42,12 @@ To run the notebooks:
 ```bash
 git clone https://github.com/KHOUTAIBI/TSIA-TP.git
 cd TSIA-TP
+```
+2. Repository Structure
+TSIA-TP/
+├── ML/
+├── OptimizationForML/
+├── Time-Series-1/
+├── Time-Series-2/
+└── README.md
+
