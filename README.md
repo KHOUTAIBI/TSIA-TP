@@ -44,10 +44,10 @@ git clone https://github.com/KHOUTAIBI/TSIA-TP.git
 cd TSIA-TP
 ```
 2. Repository Structure
-TSIA-TP/
-├── ML/
-├── OptimizationForML/
-├── Time-Series-1/
-├── Time-Series-2/
-└── README.md
+TSIA-TP/  
+├── ML/  
+├── OptimizationForML/  
+├── Time-Series-1/  
+├── Time-Series-2/  
+└── README.md  
 
