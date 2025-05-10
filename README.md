@@ -34,6 +34,10 @@ This repository contains a series of practical assignments completed for the TSI
 - Exponential smoothing
 - Forecasting and evaluation/ Kalman Filtering
 
+### audioMusicML
+- PSOLA Algoirthm for audio speed/pitch modification
+- Non Negative Matrix Factorization (NMF)
+
 ## Getting Started
 
 To run the notebooks:
