@@ -53,7 +53,7 @@ TSIA-TP/
 ├── ML/  
 ├── OptimizationForML/  
 ├── Time-Series-1/  
-├── Time-Series-2/
+├── Time-Series-2/  
 ├── audioMusicML/  
 └── README.md  
 
