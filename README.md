@@ -8,7 +8,7 @@ This repository contains a series of practical assignments completed for the TSI
 - [`OptimizationForML/`](./OptimizationForML): Optimization techniques applied to ML
 - [`Time-Series-1/`](./Time-Series-1): Introduction to time series processing
 - [`Time-Series-2/`](./Time-Series-2): Advanced time series modeling and forecasting
-- [`audioMusicML`](./audioMusicML): Audio/Music processing, Speech recognition and Deep Learning for Audio
+- [`audioMusicML/`](./audioMusicML): Audio/Music processing, Speech recognition and Deep Learning for Audio
 
 ## Topics Covered
 
